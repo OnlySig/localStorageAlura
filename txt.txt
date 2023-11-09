@@ -1,0 +1,12 @@
+modelo OSI x modelo TCP/IP
+O modelo TCP/IP é um modelo alternativo do funcionamento da internet. Ele divide os processos envolvidos em quatro camadas em vez de sete. Alguns argumentariam que o modelo TCP/IP reflete melhor a maneira como a internet funciona hoje, mas o modelo OSI ainda é amplamente referenciado para a compreensão da internet e ambos os modelos têm seus pontos fortes e fracos.
+
+No modelo TCP/IP as quatro camadas são:
+
+4. A camada de aplicação: corresponde, aproximadamente, à camada 7 no modelo OSI.
+3. Camada de transporte: corresponde à camada 4 no modelo OSI.
+2. Camada da Internet: corresponde à camada 3 no modelo OSI.
+1. Camada de acesso à rede: combina os processos das camadas 1 e 2 no modelo OSI.
+Mas onde estão as camadas 5 e 6 do OSI no modelo TCP/IP? Algumas fontes sustentam que os processos nas camadas 5 e 6 do OSI não são mais necessários na internet moderna ou, na verdade, pertencem às camadas 7 e 4 (representadas pelas camadas 4 e 3 no modelo TCP / IP).
+
+Por exemplo, uma vez que o protocolo TCP abre e mantém sessões na camada 4 do OSI, pode-se considerar a camada 5 do OSI (a camada "sessão") desnecessária – e não está representada no modelo TCP/IP. Além disso, a criptografia e a descriptografia HTTPS podem ser consideradas um processo da camada de aplicação (camada 7 do OSI ou camada 4 do TCP/IP) em vez de um processo da camada de apresentação (camada 6 do OSI).
