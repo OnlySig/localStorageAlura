@@ -321,6 +321,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .app__form-textarea {
+    outline: none;
     width: 100%;
     border-radius: 0.8rem;
     padding: 0.8rem;

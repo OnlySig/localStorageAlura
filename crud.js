@@ -1,4 +1,8 @@
 const taskContainer = document.querySelector(".app__section-task-list")
+const formTask = document.querySelector(".app__form-add-task")
+const btnToggleFormTask = document.querySelector(".app__button--add-task")
+const formLabel = document.querySelector(".app__form-label")
+const textarea = document.querySelector(".app__form-textarea")
 const taskIcon = `
 <svg class="app__section-task-icon-status" width="24" height="24" viewBox="0 0 24 24"
     fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -9,18 +13,8 @@ const taskIcon = `
     />
 </svg>
 `
-
-let tarefas = [
-    {
-        descricao: "tarafe Concluida",
-        concluida: true
-    }, 
-    {
-        descricao: "tarafe Pendente",
-        concluida: false
-    }
-]
-
+const localStorageTarefas = localStorage.tarefas
+let tarefas = localStorageTarefas ? JSON.parse(localStorageTarefas) : []
 
 function createTask(tarefa) {
     const newLi = document.createElement("li")
@@ -44,3 +38,37 @@ tarefas.forEach(tarefa => {
     const taskItem = createTask(tarefa)
     taskContainer.appendChild(taskItem)
 })
+
+btnToggleFormTask.addEventListener("click", e => {
+    formTask.classList.toggle("hidden")
+    const btnCancelar = e.target.parentNode.children[3][2]
+    btnCancelar.addEventListener("click", _ => formTask.classList.add("hidden"))
+})
+
+const updateLocalStorage = () => {
+    localStorage.setItem("tarefas", JSON.stringify(tarefas))
+}
+
+formTask.addEventListener("submit", e => {
+    e.preventDefault()
+    addTarefa()
+})
+
+formTask.addEventListener("keydown", e => {
+    if(e.key === "Enter") {
+        addTarefa()
+    } 
+})
+
+
+function addTarefa() {
+    const task = {
+        descricao: textarea.value,
+        concluida: false
+    }
+    tarefas.push(task)
+    const taskItem = createTask(task)
+    taskContainer.appendChild(taskItem)
+    updateLocalStorage()
+    textarea.value = ""
+}
