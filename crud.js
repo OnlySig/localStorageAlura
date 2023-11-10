@@ -4,6 +4,8 @@ const btnToggleFormTask = document.querySelector(".app__button--add-task")
 const formLabel = document.querySelector(".app__form-label")
 const taskAtiveDescription = document.querySelector(".app__section-active-task-description")
 const textarea = document.querySelector(".app__form-textarea")
+const btnDeleta = document.querySelector(".app__form-footer__button--delete")
+const btnDeletaLimpaAll = document.querySelectorAll(".app__section-task-header__li__button")
 const taskIcon = `
 <svg class="app__section-task-icon-status" width="24" height="24" viewBox="0 0 24 24"
     fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -21,6 +23,10 @@ let tarefaEmEdicao = null
 let pEmEdicao = null
 
 const selecionaTarefa = (tarefa, elemento) => {
+    if(tarefa.concluida){
+        return
+    }
+
     document.querySelectorAll('.app__section-task-list-item-active').forEach(button => {
         button.classList.remove('app__section-task-list-item-active')
     })
@@ -85,8 +91,12 @@ function createTask(tarefa) {
     btnEditar.classList.add("app_button-edit")
     
     svgIcon.addEventListener("click", e => {
-        e.stopPropagation()
-        newLi.classList.add('app__section-task-list-item-complete')
+        if(tarefa == tarefaSelecionada) {
+            e.stopPropagation()
+            newLi.classList.add('app__section-task-list-item-complete')
+            tarefaSelecionada.concluida = true
+            updateLocalStorage()
+        }
     })
 
     if(tarefa.concluida) {
@@ -117,6 +127,56 @@ btnToggleFormTask.addEventListener("click", e => {
     const btnCancelar = e.target.parentNode.children[3][2]
     btnCancelar.addEventListener("click", _ => formTask.classList.add("hidden"))
 })
+
+btnDeleta.addEventListener("click", e => {
+    if(tarefaSelecionada) {
+        const index = tarefas.indexOf(tarefaSelecionada)
+        console.log(index)
+        if(index !== -1){
+            tarefas.splice(index, 1)
+        }
+        itemTarefaSelecionada.remove()
+        tarefas.filter(t => t != tarefaSelecionada)
+        itemTarefaSelecionada = null
+        tarefaSelecionada = null
+    } else {
+        alert("Para remover um elemento selecione/clique nele antes!")
+    }
+    updateLocalStorage()
+    limpaForm()
+})
+
+btnDeletaLimpaAll.forEach(element => {
+    element.addEventListener("click", e => {
+        if(e.target.innerText == "Limpar todas as tarefas") {
+            localStorage.removeItem('tarefas')
+            document.querySelectorAll(".app__section-task-list-item").forEach(element => {
+                element.remove()
+            })
+        } else {
+            filtrarEremoverItens(true)
+            function filtrarEremoverItens(precisaRemover) {
+                // Recupera todos os itens do localStorage
+                const todosItens = { ...localStorage };
+              
+                // Filtra os itens com base na variável booleana
+                const itensFiltrados = Object.keys(todosItens).filter(chave => {
+                  // Supondo que os valores são strings 'true' ou 'false'
+                  const valorBooleano = JSON.parse(todosItens[chave]);
+                  return valorBooleano !== precisaRemover;
+                });
+              
+                // Remove os itens filtrados do localStorage
+                itensFiltrados.forEach(chave => localStorage.removeItem(chave));
+            }
+            
+            document.querySelectorAll(".app__section-task-list-item-complete").forEach(element => {
+            element.remove()
+            })
+        }
+    })
+})
+
 
 const updateLocalStorage = () => {
     localStorage.setItem("tarefas", JSON.stringify(tarefas))
@@ -157,4 +217,13 @@ formTask.addEventListener("keydown", e => {
         updateLocalStorage()
         limpaForm()
     } 
+})
+
+document.addEventListener('TarefaFinalizada', e => {
+    if(tarefaSelecionada) {
+        tarefaSelecionada.concluida = true
+        itemTarefaSelecionada.classList.add("app__section-task-list-item-complete")
+        itemTarefaSelecionada.querySelector('button').setAttribute('disabled', true)
+        updateLocalStorage()
+    }
 })
